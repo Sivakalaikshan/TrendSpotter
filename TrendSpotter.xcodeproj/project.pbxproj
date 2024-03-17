@@ -7,18 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E88A7A42BA69B11005E7D18 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E88A7A32BA69B11005E7D18 /* HomeView.swift */; };
+		0E88A7A62BA6D6ED005E7D18 /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E88A7A52BA6D6ED005E7D18 /* NavigationBarView.swift */; };
+		0E88A7A82BA6F397005E7D18 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E88A7A72BA6F397005E7D18 /* ProfileView.swift */; };
 		0ED157872BA54ABB00781B07 /* TrendSpotterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED157862BA54ABB00781B07 /* TrendSpotterApp.swift */; };
 		0ED157892BA54ABB00781B07 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED157882BA54ABB00781B07 /* ContentView.swift */; };
 		0ED1578B2BA54ABD00781B07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0ED1578A2BA54ABD00781B07 /* Assets.xcassets */; };
 		0ED1578E2BA54ABD00781B07 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0ED1578D2BA54ABD00781B07 /* Preview Assets.xcassets */; };
+		0ED157962BA550E400781B07 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED157952BA550E400781B07 /* LoginView.swift */; };
+		0ED1579A2BA557EF00781B07 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED157992BA557EF00781B07 /* LoginViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E88A7A32BA69B11005E7D18 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		0E88A7A52BA6D6ED005E7D18 /* NavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarView.swift; sourceTree = "<group>"; };
+		0E88A7A72BA6F397005E7D18 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		0ED157832BA54ABB00781B07 /* TrendSpotter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrendSpotter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0ED157862BA54ABB00781B07 /* TrendSpotterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendSpotterApp.swift; sourceTree = "<group>"; };
 		0ED157882BA54ABB00781B07 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		0ED1578A2BA54ABD00781B07 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0ED1578D2BA54ABD00781B07 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		0ED157952BA550E400781B07 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		0ED157992BA557EF00781B07 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +61,9 @@
 		0ED157852BA54ABB00781B07 /* TrendSpotter */ = {
 			isa = PBXGroup;
 			children = (
+				0ED157982BA552D100781B07 /* Model */,
+				0ED157972BA551C300781B07 /* ViewModel */,
+				0ED157942BA550B800781B07 /* Views */,
 				0ED157862BA54ABB00781B07 /* TrendSpotterApp.swift */,
 				0ED157882BA54ABB00781B07 /* ContentView.swift */,
 				0ED1578A2BA54ABD00781B07 /* Assets.xcassets */,
@@ -65,6 +78,32 @@
 				0ED1578D2BA54ABD00781B07 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		0ED157942BA550B800781B07 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0ED157952BA550E400781B07 /* LoginView.swift */,
+				0E88A7A32BA69B11005E7D18 /* HomeView.swift */,
+				0E88A7A52BA6D6ED005E7D18 /* NavigationBarView.swift */,
+				0E88A7A72BA6F397005E7D18 /* ProfileView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0ED157972BA551C300781B07 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				0ED157992BA557EF00781B07 /* LoginViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		0ED157982BA552D100781B07 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +122,8 @@
 			dependencies = (
 			);
 			name = TrendSpotter;
+			packageProductDependencies = (
+			);
 			productName = TrendSpotter;
 			productReference = 0ED157832BA54ABB00781B07 /* TrendSpotter.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +152,8 @@
 				Base,
 			);
 			mainGroup = 0ED1577A2BA54ABB00781B07;
+			packageReferences = (
+			);
 			productRefGroup = 0ED157842BA54ABB00781B07 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -137,7 +180,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0ED1579A2BA557EF00781B07 /* LoginViewModel.swift in Sources */,
+				0ED157962BA550E400781B07 /* LoginView.swift in Sources */,
+				0E88A7A62BA6D6ED005E7D18 /* NavigationBarView.swift in Sources */,
 				0ED157892BA54ABB00781B07 /* ContentView.swift in Sources */,
+				0E88A7A42BA69B11005E7D18 /* HomeView.swift in Sources */,
+				0E88A7A82BA6F397005E7D18 /* ProfileView.swift in Sources */,
 				0ED157872BA54ABB00781B07 /* TrendSpotterApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

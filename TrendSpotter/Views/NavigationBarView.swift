@@ -8,34 +8,39 @@
 import SwiftUI
 
 struct NavigationBarView: View {
+    @State private var isTabViewHidden = false
     var body: some View {
-        TabView {
-                   FirstView()
-                       .tabItem {
-                           Image(systemName: "house")
-                           Text("Home")
+        VStack {
+                   if !isTabViewHidden {
+                       TabView {
+                           FirstView()
+                               .tabItem {
+                                   Image(systemName: "house")
+                                   Text("Home")
+                               }
+                           SecondView()
+                               .tabItem {
+                                   Image(systemName: "suitcase")
+                                   Text("Products")
+                               }
+                           ThirdView()
+                               .tabItem {
+                                   Image(systemName: "cart")
+                                   Text("Cart")
+                               }
+                           FourthView()
+                               .tabItem {
+                                   Image(systemName: "person")
+                                   Text("Account")
+                               }
                        }
-                   SecondView()
-                .tabItem {
-                    Image(systemName: "suitcase")
-                    Text("Products")
-                }
-                   ThirdView()
-                       .tabItem {
-                           Image(systemName: "cart")
-                           Text("Cart")
-                       }
-                   FourthView()
-                       
-                       .tabItem {
-                           Image(systemName: "person")
-                           Text("Account")
-                       }
-                   
+                       .tabViewStyle(DefaultTabViewStyle())
+                       .accentColor(.black)
+                       .edgesIgnoringSafeArea(.all)
+                   }
+
+                  
                }
-               .tabViewStyle(DefaultTabViewStyle())
-               .accentColor(.black)
-               .edgesIgnoringSafeArea(.all)
     
         
         

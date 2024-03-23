@@ -15,6 +15,10 @@ struct ProfileView: View {
 
     var body: some View {
         VStack{
+            Text("Logout")
+                .bold(true)
+                .foregroundColor(.red)
+                .padding(.leading,280)
             Circle()
                 .foregroundColor(.gray)
                 .frame(width: 200)
@@ -113,7 +117,7 @@ struct ProfileView: View {
                     }) {
                         Text("Done")
                             .padding()
-                            .background(Color.blue)
+                            .background(Color.green)
                             .foregroundColor(.white)
                             .font(.headline)
                             .cornerRadius(10)

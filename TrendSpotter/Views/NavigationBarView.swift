@@ -49,13 +49,13 @@ struct FirstView: View {
 
 struct SecondView: View {
     var body: some View {
-        Text("second View")
+        ProductView()
     }
 }
 
 struct ThirdView: View {
     var body: some View {
-        Text("Third View")
+        CartView()
     }
 }
 

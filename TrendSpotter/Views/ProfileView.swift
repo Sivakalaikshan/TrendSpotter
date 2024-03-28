@@ -9,9 +9,12 @@ import SwiftUI
 
 struct ProfileView: View {
     @State private var name: String = ""
+    @State private var isDatePickerVisible = false
     @State private var selectedDate = Date()
-        @State private var isDatePickerVisible = false
-        @State private var dateString = ""
+    @State private var dateString: String = ""
+    @State private var selectedGender = "Male"
+        
+        let genders = ["Male", "Female", "Other"]
 
     var body: some View {
         VStack{
@@ -28,8 +31,6 @@ struct ProfileView: View {
                 VStack {
                    
                     VStack {
-                        Text("User Name")
-                            .padding(.trailing,250)
                         RoundedRectangle(cornerRadius: 15)
                             .stroke(lineWidth: 0.5)
                             .frame(width: 350, height: 50)
@@ -41,12 +42,12 @@ struct ProfileView: View {
                                 .padding(.horizontal, 56)
                             }
                     }.padding(.bottom,5)
+                    
                    
                     
                     
                     VStack {
-                        Text("Email Address")
-                            .padding(.trailing,230)
+                        
                         RoundedRectangle(cornerRadius: 15)
                             .stroke(lineWidth: 0.5)
                             .frame(width: 350, height: 50)
@@ -62,43 +63,47 @@ struct ProfileView: View {
                     
                     
                     VStack {
-                        Text("Date Of Birth")
-                            .padding(.trailing,240)
                         RoundedRectangle(cornerRadius: 15)
-                            .stroke(lineWidth: 0.5)
-                            .frame(width: 350, height: 50)
-                            .padding(.horizontal, 48)
-                            .overlay {
-                                HStack {
-                                    TextField("Select a date", text: $dateString)
-                                        .padding()
-                                        .onTapGesture {
-                                            isDatePickerVisible.toggle()
-                                        }
-                                    if isDatePickerVisible {
-                                        DatePicker("", selection: $selectedDate, displayedComponents: .date)
-                                            .datePickerStyle(GraphicalDatePickerStyle())
-                                            .labelsHidden()
-                                            .frame(maxHeight: 400)
-                                            .padding()
-                                            .background(Color.white)
-                                            .cornerRadius(10)
-                                            .shadow(radius: 5)
-                                            .onChange(of: selectedDate) { _ in
-                                                dateString = formatDate(selectedDate)
-                                                isDatePickerVisible = false
-                                            }
-                                    }
-                                }
-                                .padding(.horizontal, 56)
-                            }
+                                   .stroke(lineWidth: 0.5)
+                                   .frame(width: 350, height: 50) // Adjusted width
+                                   .padding(.horizontal, 48)
+                                   .overlay {
+                                       HStack {
+                                           Spacer()
+                                           Button(action: {
+                                               isDatePickerVisible.toggle()
+                                           }) {
+                                               Text(dateString.isEmpty ? "Select a date" : dateString)
+                                           }
+                                           .padding()
+                                           .foregroundColor(.black)
+                                           Spacer()
+                                       }
+                                   }
+                               if isDatePickerVisible {
+                                   VStack {
+                                       DatePicker("", selection: $selectedDate, displayedComponents: .date)
+                                           .datePickerStyle(GraphicalDatePickerStyle())
+                                           .labelsHidden()
+                                           .frame(width: 200, height: 200) // Adjusted width and height
+                                           .padding()
+                                       Button("Done") {
+                                           dateString = formatDate(selectedDate)
+                                           isDatePickerVisible = false
+                                       }
+                                       .padding()
+                                   }
+                                   .background(Color.white)
+                                   .cornerRadius(10)
+                                   .shadow(radius: 5)
+                                   .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                   .background(Color.black.opacity(0.4).ignoresSafeArea())
+                               }
                     }.padding(.bottom,5)
                     
                     
                    
                     VStack{
-                        Text("Password")
-                            .padding(.trailing,260)
                         RoundedRectangle(cornerRadius: 15)
                             .stroke(lineWidth: 0.5)
                             .frame(width: 350, height: 50)
@@ -117,6 +122,7 @@ struct ProfileView: View {
                     }) {
                         Text("Done")
                             .padding()
+                            .frame(width: 350)
                             .background(Color.green)
                             .foregroundColor(.white)
                             .font(.headline)
@@ -140,10 +146,10 @@ struct ProfileView: View {
     }
     
     func formatDate(_ date: Date) -> String {
-           let formatter = DateFormatter()
-           formatter.dateStyle = .medium
-           return formatter.string(from: date)
-       }
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter.string(from: date)
+    }
 }
 
 #Preview {

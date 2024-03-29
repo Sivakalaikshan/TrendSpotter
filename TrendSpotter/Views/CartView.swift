@@ -11,6 +11,7 @@ struct Product {
     var id = UUID()
     var name: String
     var brand: String
+    var size: String
     var price: Double
     var quantity: Int
     var image: String
@@ -44,9 +45,9 @@ struct MyButtonStyle: ButtonStyle {
 
 struct CartView: View {
     @State private var products: [Product] = [
-        Product(name: "Rayon Printed Shirt", brand: "ODEL", price: 2500.00, quantity: 1, image: "odelshirt"),
-        Product(name: "Casual T-shirt", brand: "Levis", price: 2000.00, quantity: 1, image: "levistshirt"),
-        Product(name: "Casual T-shirt", brand: "Levis", price: 2000.00, quantity: 1, image: "levistshirt")
+        Product(name: "Rayon Printed Shirt", brand: "ODEL", size: "S", price: 2500.00, quantity: 1, image: "odelshirt"),
+        Product(name: "Casual T-shirt", brand: "Levis", size: "M", price: 2000.00, quantity: 1, image: "levistshirt"),
+        Product(name: "Casual T-shirt", brand: "Levis", size: "XL", price: 2000.00, quantity: 1, image: "levistshirt")
     ]
     @State private var subtotal = 4500
     @State private var shipping = 450
@@ -73,7 +74,7 @@ struct CartView: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(product.name)
                                     .font(.headline)
-                                Text(product.brand)
+                                Text("\(product.brand) - \(product.size)")
                                     .font(.subheadline)
                                 Text(String(format: "RS.%.2f", product.price))
                                     .font(.subheadline)

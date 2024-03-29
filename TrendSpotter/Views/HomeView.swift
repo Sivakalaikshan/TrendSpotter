@@ -11,7 +11,7 @@ import SwiftUI
 struct HomeView: View {
   
     
-    @State private var search: String = ""
+    
     @State private var currentIndex = 0
        @State private var timer: Timer?
        let images = ["kids", "women", "men"]
@@ -23,27 +23,12 @@ struct HomeView: View {
             HStack {
                 Text("CHOOSE YOUR BEST TRENDS \nBEST DRESSES")
                             .foregroundColor(.black)
-                Image(systemName: "cart")
-                    .foregroundColor(.gray)
-                    .padding(.leading, 70) // Adjust the padding as needed
+                
                 Spacer()
             }
             .padding()
 
-            RoundedRectangle(cornerRadius: 25)
-                .stroke(lineWidth: 0.5)
-                .frame(width: 350, height: 50)
-                .padding(.horizontal, 48)
-                .overlay {
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(.gray)
-                        TextField("search", text: $search)
-                    
-                    }
-                    .padding(.horizontal, 56)
-                }
-
+           
             
             ScrollView(.horizontal, showsIndicators: false) {
                             ScrollViewReader { scrollViewProxy in

@@ -10,9 +10,10 @@ import SwiftUI
 struct ContentView: View {
   
     var body: some View {
-        NavigationBarView()
+        NavigationBarView(isTabViewHidden: .constant(false))
+        }
     }
-}
+
 
 #Preview {
     ContentView()

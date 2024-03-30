@@ -55,6 +55,15 @@ struct CartView: View {
     @State private var isCashOnDeliverySelected = false
     @State private var isCardPaymentSelected = false
     @State private var isCheckoutViewPresented = false
+    
+    let productID: String
+        @ObservedObject var viewModel: ProductViewModel
+        
+        init(productID: String) {
+            self.productID = productID
+            self.viewModel = ProductViewModel()
+            viewModel.fetchProductDetails(for: productID)
+        }
 
     var body: some View {
         VStack {
@@ -168,7 +177,7 @@ struct CartView: View {
         .sheet(isPresented: $isCheckoutViewPresented) {
             CheckoutView()
         }
-        .navigationBarTitle("Cart")
+        .navigationBarBackButtonHidden(true)
     }
 
     private func updateQuantity(for product: Product, increase: Bool) {
@@ -189,5 +198,5 @@ struct CartView: View {
 
 
 #Preview {
-    CartView()
+    CartView(productID: "")
 }

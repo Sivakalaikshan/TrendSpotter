@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NavigationBarView: View {
-    @State private var isTabViewHidden = false
+    @Binding var isTabViewHidden: Bool
     var body: some View {
         VStack {
                    if !isTabViewHidden {
@@ -37,6 +37,7 @@ struct NavigationBarView: View {
                        .tabViewStyle(DefaultTabViewStyle())
                        .accentColor(.black)
                        .edgesIgnoringSafeArea(.all)
+
                    }
 
                   
@@ -60,7 +61,7 @@ struct SecondView: View {
 
 struct ThirdView: View {
     var body: some View {
-        CartView()
+        CartView(productID: "")
     }
 }
 
@@ -71,6 +72,9 @@ struct FourthView: View {
 
 }
 
+
 #Preview {
-    NavigationBarView()
+    NavigationBarView(isTabViewHidden: .constant(false))
 }
+
+

@@ -5,7 +5,7 @@
 //  Created by NIBM-LAB04-PC02 on 2024-03-30.
 //
 
-import Foundation
+import Foundation 
 
 struct ProductModel: Codable, Identifiable {
     var id: String
@@ -34,6 +34,7 @@ struct ProductModel: Codable, Identifiable {
 struct APIConstants {
     static let getallURL = "https://clothing-api-ios.onrender.com/products/get"
     static let getidURL = "https://clothing-api-ios.onrender.com/getid/"
+    static let getbrandURL = "https://clothing-api-ios.onrender.com/products/products"
 }
 
 

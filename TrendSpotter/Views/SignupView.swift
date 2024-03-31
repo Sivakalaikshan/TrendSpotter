@@ -91,6 +91,7 @@ struct SignupView: View {
                
             }
         .offset(y:100)
+        .navigationBarBackButtonHidden(true)
     
     HStack{
         Text("Already have an Account?")

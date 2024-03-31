@@ -10,24 +10,25 @@ import URLImage
 
 struct ProductDetailsView: View {
     @EnvironmentObject var cartVM: CartViewModel
-        
+    @State private var islogged: Bool = false
+    @State private var isLoginScreenPresented = false
         @State private var selectedSize: String?
     @State private var selectedButton: String?
     @State private var showCartView = false
-    let productID: String
-        @ObservedObject var viewModel: ProductViewModel
+    @ObservedObject var viewModel: ProductViewModel
+        let productID: String
         
-        init(productID: String) {
-            self.productID = productID
-            self.viewModel = ProductViewModel()
-            viewModel.fetchProductDetails(for: productID)
-        }
+    init(productID: String) {
+        self.productID = productID
+        self.viewModel = ProductViewModel()
+        viewModel.fetchProductDetails(for: productID)
+    }
     var body: some View {
         NavigationView{
             VStack{
                 
                 
-                if let product = viewModel.products.first {
+                if let product = viewModel.products.first(where: { $0.id == productID }) {
                     URLImage(URL(string: product.image)!) { image in
                         image
                             .resizable()
@@ -72,10 +73,15 @@ struct ProductDetailsView: View {
                     
                     Button(action: {
                         showCartView = true
-                        if let selectedSize = selectedSize {
-                            let cartItem = CartModel( product: viewModel.products.first?.id ?? "" , quantity: 1, size: selectedSize)
+                        if islogged{
+                            if let selectedSize = selectedSize {
+                                let cartItem = CartModel( product: viewModel.products.first?.id ?? "" , quantity: 1, size: selectedSize)
                                 cartVM.saveCartItem(cartItem)
                             }
+                        }
+                        else {
+                            isLoginScreenPresented = true
+                        }
                     }) {
                         Text("Add Cart")
                             .padding()
@@ -85,9 +91,11 @@ struct ProductDetailsView: View {
                             .font(.headline)
                             .cornerRadius(10)
                     }
-                    NavigationLink(destination: CartView(productID: viewModel.selectedProductID ?? ""), isActive: $showCartView){
+                    
+                    NavigationLink(destination: LoginView(productID: viewModel.selectedProductID ?? ""), isActive: $showCartView){
                         
-                    }.navigationBarBackButtonHidden(true)
+                    }
+                    .navigationBarBackButtonHidden(true)
                     
                     
                     
@@ -98,7 +106,7 @@ struct ProductDetailsView: View {
             
             
         }
-        .navigationBarBackButtonHidden(true)
+        
         
     }
 }

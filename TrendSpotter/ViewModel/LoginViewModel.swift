@@ -17,6 +17,7 @@ class LoginViewModel: ObservableObject{
     @Published var showError : Bool = false
     @Published var errorMessage : String = ""
     @Published var success : Bool = false
+    @Published var navigateToSignup: Bool = false
     
     
     func verifyLogin()

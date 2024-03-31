@@ -8,11 +8,21 @@
 import SwiftUI
 
 struct SpalshView: View {
+    @State private var isActive = false
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
+        VStack {
+                   Image("logo")
+                       .padding()
+               }
+               .onAppear {
+                   DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                       self.isActive = true
+                   }
+               }
+               .background(NavigationLink("", destination: NavigationBarView(isTabViewHidden: .constant(false)), isActive: $isActive))
+               .navigationBarHidden(true)
+           }
+       }
 #Preview {
     SpalshView()
 }

@@ -11,45 +11,48 @@ import SwiftUI
 struct HomeView: View {
   
     
-    
+    @State private var isActive = false
     @State private var currentIndex = 0
        @State private var timer: Timer?
        let images = ["kids", "women", "men"]
        //let timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
+    @State private var selectedBrand: String = ""
+    
 
     var body: some View {
+        NavigationView{
         VStack {
             
             HStack {
                 Text("CHOOSE YOUR BEST TRENDS \nBEST DRESSES")
-                            .foregroundColor(.black)
+                    .foregroundColor(.black)
                 
                 Spacer()
             }
             .padding()
-
-           
+            
+            
             
             ScrollView(.horizontal, showsIndicators: false) {
-                            ScrollViewReader { scrollViewProxy in
-                                HStack(spacing: 0) {
-                                    ForEach(images.indices, id: \.self) { index in
-                                        Image(images[index])
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: UIScreen.main.bounds.width)
-                                           
-                                    }
-                                }
-                                .frame(width: UIScreen.main.bounds.width * CGFloat(images.count), alignment: .leading)
-                                .onAppear {
-                                    startTimer(with: scrollViewProxy)
-                                }
-                                .onDisappear {
-                                    stopTimer()
-                                }
-                            }
+                ScrollViewReader { scrollViewProxy in
+                    HStack(spacing: 0) {
+                        ForEach(images.indices, id: \.self) { index in
+                            Image(images[index])
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: UIScreen.main.bounds.width)
+                            
                         }
+                    }
+                    .frame(width: UIScreen.main.bounds.width * CGFloat(images.count), alignment: .leading)
+                    .onAppear {
+                        startTimer(with: scrollViewProxy)
+                    }
+                    .onDisappear {
+                        stopTimer()
+                    }
+                }
+            }
             .padding()
             
             
@@ -78,6 +81,8 @@ struct HomeView: View {
                                         
                                         Button(action: {
                                             // Add action here
+                                            selectedBrand = "Crocodile"
+                                            isActive = true
                                         }) {
                                             Text("See More")
                                                 .bold()
@@ -91,7 +96,7 @@ struct HomeView: View {
                                         }
                                     }
                                 }
-                                .padding()
+                                    .padding()
                             )
                     }
                     
@@ -118,6 +123,8 @@ struct HomeView: View {
                                         
                                         Button(action: {
                                             // Add action here
+                                            selectedBrand = "ODEL"
+                                            isActive = true
                                         }) {
                                             Text("See More")
                                                 .bold()
@@ -129,9 +136,11 @@ struct HomeView: View {
                                                 .cornerRadius(30)
                                                 .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 2)
                                         }
+                                        
                                     }
+                                    
                                 }
-                                .padding()
+                                    .padding()
                             )
                     }
                     
@@ -158,6 +167,8 @@ struct HomeView: View {
                                         
                                         Button(action: {
                                             // Add action here
+                                            selectedBrand = "levis"
+                                            isActive = true
                                         }) {
                                             Text("See More")
                                                 .bold()
@@ -171,7 +182,7 @@ struct HomeView: View {
                                         }
                                     }
                                 }
-                                .padding()
+                                    .padding()
                             )
                     }
                     
@@ -197,7 +208,8 @@ struct HomeView: View {
                                             .padding()
                                         
                                         Button(action: {
-                                            // Add action here
+                                            selectedBrand = "Boss"
+                                            isActive = true
                                         }) {
                                             Text("See More")
                                                 .bold()
@@ -211,7 +223,7 @@ struct HomeView: View {
                                         }
                                     }
                                 }
-                                .padding()
+                                    .padding()
                             )
                     }
                     
@@ -239,6 +251,8 @@ struct HomeView: View {
                                         
                                         Button(action: {
                                             // Add action here
+                                            selectedBrand = "Nike"
+                                            isActive = true
                                         }) {
                                             Text("See More")
                                                 .bold()
@@ -252,9 +266,14 @@ struct HomeView: View {
                                         }
                                     }
                                 }
-                                .padding()
+                                    .padding()
                             )
                     }
+                    NavigationLink(destination: ProductView(brand: selectedBrand), isActive: $isActive) {
+                        EmptyView()
+                    }
+                    .hidden()
+                    .navigationBarBackButtonHidden(true)
                     
                 }
                 .padding()
@@ -262,16 +281,18 @@ struct HomeView: View {
                 
                 
             }
-
             
-
-          
-
-
             
-           Spacer()
+            
+            
+            
+            
+            
+            Spacer()
             
         }// this is end of top vstack
+    }
+        .navigationBarBackButtonHidden(true)
     }
     
   

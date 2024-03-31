@@ -10,7 +10,10 @@ import SwiftUI
 struct ContentView: View {
   
     var body: some View {
-        NavigationBarView(isTabViewHidden: .constant(false))
+       // NavigationBarView(isTabViewHidden: .constant(false))
+        NavigationView{
+            SpalshView()
+        }.navigationBarBackButtonHidden(true)
         }
     }
 

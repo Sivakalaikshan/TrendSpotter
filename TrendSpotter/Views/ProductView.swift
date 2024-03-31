@@ -10,26 +10,24 @@ import URLImage
 
 struct ProductView: View {
     
-    @StateObject var viewModel: ProductViewModel = ProductViewModel()
+    @ObservedObject var VM: ProductViewModel
     @State private var search: String = ""
     @State private var isEditing = false
-    @State private var selectedButton: String?
+    @State private var selectedButton: String? = "All"
     @State private var showProductDetails = false
     @State private var showProductView = false
     @State private var isTabViewHidden = false
+    @State private var brandName: String?
+    var productID: String = "defaultProductID"
+    let brand: String
     
-
-    struct Product {
-            let name: String
-            let imageName: String
-            let brand: String
-            let price: Double
+    init(brand: String){
+            self.brand = brand
+        self.VM = ProductViewModel()
+       // VM.fetchProductbrand(for: brand)
         }
 
-        let products: [Product] = [
-            Product(name: "Rayon Printed Shirt",  imageName: "odelshirt",brand: "ODEL" , price: 2500.00),
-            Product(name: "Casual T-shirt", imageName: "levistshirt", brand: "Levis" , price: 2000.00)
-        ]
+   
     var body: some View {
         NavigationView{
             VStack{
@@ -68,7 +66,7 @@ struct ProductView: View {
                 
                 ScrollView(.horizontal) {
                     HStack(spacing: 20) {
-                        ForEach(["New Arrivals", "Shirts", "Jeans", "Men", "Women", "Kids"], id: \.self) { title in
+                        ForEach(["All", "Shirt", "T-Shirt", "Man", "Woman"], id: \.self) { title in
                             Button(action: {
                                 selectedButton = title
                             }) {
@@ -88,58 +86,70 @@ struct ProductView: View {
                     
                 }
                 
-                ScrollView {
-                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)], spacing: 16) {
-                        ForEach(viewModel.products) { product in
-                            Button {
-                                viewModel.selectedProductID = product.id
-                                showProductView = true
-                            } label: {
-                                VStack {
-                                    URLImage(URL(string: product.image)!) { image in
-                                        image
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 150, height: 250)
-                                            .cornerRadius(8)
+                
+            //    if let product = VM.products.first(where: { $0.brandName == brand }) {
+                    ScrollView {
+                        LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)], spacing: 16) {
+                            ForEach(VM.products.filter {
+                                let productNameMatch = search.isEmpty || $0.productName.lowercased().contains(search.lowercased())
+                                let brandNameMatch = search.isEmpty || $0.brandName.lowercased().contains(search.lowercased())
+                                let selectedButtonMatch = selectedButton == "All" || selectedButton == $0.subcategoryName || selectedButton == $0.categoryName
+                                return productNameMatch && brandNameMatch && selectedButtonMatch
+                            })  { product in
+                                (NavigationLink(destination: ProductDetailsView(productID: product.id ?? "")) {
+                                    VStack {
+                                        URLImage(URL(string: product.image)!) { image in
+                                            image
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 150, height: 250)
+                                                .cornerRadius(8)
+                                        }
+                                        
+                                        Text(product.productName)
+                                            .padding(.bottom, 4)
+                                            .background(Color.white)
+                                        
+                                        Text("\(product.brandName) - Rs.\(product.price)")
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
                                     }
-                                    
-                                    Text(product.productName)
-                                        .padding(.bottom, 4)
-                                        .background(Color.white)
-                                    Text("\(product.brandName) - Rs.\(product.price)")
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding(8)
-                                .cornerRadius(8)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(8)
+                                    .cornerRadius(8)
+                                })
+                                .buttonStyle(PlainButtonStyle())
                             }
-                            .buttonStyle(PlainButtonStyle())
                         }
                     }
-                }
-                
-                
-                NavigationLink(destination: ProductDetailsView(productID: viewModel.selectedProductID ?? ""), isActive: $showProductView) {
-                    EmptyView()
-                    
-                }.hidden()
-                    .onAppear {
-                                        isTabViewHidden = false
-                                    }
                     .navigationBarBackButtonHidden(true)
+            //    }
+
+                
+                
+                
+                // NavigationLink(destination: ProductDetailsView(productID: viewModel.selectedProductID ?? ""), isActive: $showProductView) {
+                //     EmptyView()
+                
+                //  }.hidden()
+                //     .onAppear {
+                //                        isTabViewHidden = false
+                //                    }
+                
                 
                 
                 
                 Spacer()
             }//end of top vstack
+            
         }
         
     }
 }
 
 #Preview {
-    ProductView()
+    NavigationView {
+        ProductView(brand: "")
             .environmentObject(ProductViewModel())
+    }
 }

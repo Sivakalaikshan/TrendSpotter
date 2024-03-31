@@ -44,34 +44,68 @@ class ProductViewModel: ObservableObject {
     }
     
     func fetchProductDetails(for productID: String) {
-            guard let url = URL(string: "\(APIConstants.getidURL)\(productID)") else {
-                print("Invalid URL")
+        guard let url = URL(string: "\(APIConstants.getidURL)\(productID)") else {
+            print("Invalid URL")
+            return
+        }
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data else {
+                if let error = error {
+                    print("Failed to fetch product details: \(error)")
+                } else {
+                    print("No data received")
+                }
                 return
             }
 
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                guard let data = data else {
-                    if let error = error {
-                        print("Failed to fetch product details: \(error)")
-                    } else {
-                        print("No data received")
+            do {
+                let decodedResponse = try JSONDecoder().decode(ProductModel.self, from: data)
+                // Assuming you want to update the selected product details
+                DispatchQueue.main.async {
+                    if let index = self.products.firstIndex(where: { $0.id == productID }) {
+                        self.products[index] = decodedResponse
                     }
-                    return
                 }
-
-                do {
-                    _ = try JSONDecoder().decode(ProductModel.self, from: data)
-                    // Assuming you want to update the selected product details
-                    DispatchQueue.main.async {
-                        // Update the product details or navigate to a new view with the details
-                        // For example:
-                        // self.selectedProduct = decodedResponse
-                        // or
-                        // self.navigateToProductDetails(decodedResponse)
-                    }
-                } catch {
-                    print("Error decoding JSON: \(error)")
-                }
-            }.resume()
+            } catch {
+                print("Error decoding JSON: \(error)")
+            }
+        }.resume()
+    }
+    
+    
+    
+    
+    
+   /* func fetchProductbrand(for brand: String) {
+        guard let url = URL(string: "\(APIConstants.getidURL)\(brand)") else {
+            print("Invalid URL")
+            return
         }
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data else {
+                if let error = error {
+                    print("Failed to fetch product details: \(error)")
+                } else {
+                    print("No data received")
+                }
+                return
+            }
+
+            do {
+                let decodedResponse = try JSONDecoder().decode(ProductModel.self, from: data)
+                // Assuming you want to update the selected product details
+                DispatchQueue.main.async {
+                    if let index = self.products.firstIndex(where: { $0.brandName == brand }) {
+                        self.products[index] = decodedResponse
+                        print("brand")
+                    }
+                }
+            } catch {
+                print("brand Error decoding JSON: \(error)")
+            }
+        }.resume()
+    }*/
+
 }

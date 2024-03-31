@@ -42,6 +42,7 @@ struct NavigationBarView: View {
 
                   
                }
+        .navigationBarBackButtonHidden(true)
     
         
         
@@ -55,7 +56,7 @@ struct FirstView: View {
 
 struct SecondView: View {
     var body: some View {
-        ProductView()
+        ProductView( brand: "")
     }
 }
 

@@ -77,7 +77,7 @@ class ProductViewModel: ObservableObject {
     
     
     
-   /* func fetchProductbrand(for brand: String) {
+   func fetchProductbrand(for brand: String) {
         guard let url = URL(string: "\(APIConstants.getidURL)\(brand)") else {
             print("Invalid URL")
             return
@@ -106,6 +106,6 @@ class ProductViewModel: ObservableObject {
                 print("brand Error decoding JSON: \(error)")
             }
         }.resume()
-    }*/
+    }
 
 }

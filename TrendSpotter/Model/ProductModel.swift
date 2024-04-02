@@ -7,7 +7,7 @@
 
 import Foundation 
 
-struct ProductModel: Codable, Identifiable {
+struct ProductModel: Codable, Identifiable, Hashable {
     var id: String
     let productName: String
     let brandName: String
@@ -34,7 +34,7 @@ struct ProductModel: Codable, Identifiable {
 struct APIConstants {
     static let getallURL = "https://clothing-api-ios.onrender.com/products/get"
     static let getidURL = "https://clothing-api-ios.onrender.com/getid/"
-    static let getbrandURL = "https://clothing-api-ios.onrender.com/products/products"
+    static let getbrandURL = "https://clothing-api-ios.onrender.com/products/products/"
 }
 
 

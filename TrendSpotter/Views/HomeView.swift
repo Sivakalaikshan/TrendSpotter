@@ -84,7 +84,7 @@ struct HomeView: View {
                                             selectedBrand = "Crocodile"
                                             isActive = true
                                         }) {
-                                            Text("See More")
+                                            Text("See More >")
                                                 .bold()
                                                 .font(.system(size: 11))
                                                 .frame(width: 70, height: 5)
@@ -126,7 +126,7 @@ struct HomeView: View {
                                             selectedBrand = "ODEL"
                                             isActive = true
                                         }) {
-                                            Text("See More")
+                                            Text("See More >")
                                                 .bold()
                                                 .font(.system(size: 11))
                                                 .frame(width: 70, height: 5)
@@ -170,7 +170,7 @@ struct HomeView: View {
                                             selectedBrand = "levis"
                                             isActive = true
                                         }) {
-                                            Text("See More")
+                                            Text("See More >")
                                                 .bold()
                                                 .font(.system(size: 11))
                                                 .frame(width: 70, height: 5)
@@ -211,7 +211,7 @@ struct HomeView: View {
                                             selectedBrand = "Boss"
                                             isActive = true
                                         }) {
-                                            Text("See More")
+                                            Text("See More >")
                                                 .bold()
                                                 .font(.system(size: 11))
                                                 .frame(width: 70, height: 5)
@@ -254,7 +254,7 @@ struct HomeView: View {
                                             selectedBrand = "Nike"
                                             isActive = true
                                         }) {
-                                            Text("See More")
+                                            Text("See More >")
                                                 .bold()
                                                 .font(.system(size: 11))
                                                 .frame(width: 70, height: 5)
@@ -269,14 +269,16 @@ struct HomeView: View {
                                     .padding()
                             )
                     }
-                    NavigationLink(destination: ProductView(brand: selectedBrand), isActive: $isActive) {
+                    .background(NavigationLink(destination: ProductView(brand: selectedBrand), isActive: $isActive) {
                         EmptyView()
                     }
                     .hidden()
-                    .navigationBarBackButtonHidden(true)
+                    .navigationBarBackButtonHidden(true))
+                    
                     
                 }
                 .padding()
+                .navigationBarBackButtonHidden(true)
                 
                 
                 

@@ -18,13 +18,14 @@ struct ProductView: View {
     @State private var showProductView = false
     @State private var isTabViewHidden = false
     @State private var brandName: String?
+    @State private var selectedProductID: String?
     var productID: String = "defaultProductID"
     let brand: String
     
     init(brand: String){
             self.brand = brand
         self.VM = ProductViewModel()
-       // VM.fetchProductbrand(for: brand)
+        VM.fetchProductbrand(for: brand)
         }
 
    
@@ -87,55 +88,78 @@ struct ProductView: View {
                 }
                 
                 
-            //    if let product = VM.products.first(where: { $0.brandName == brand }) {
-                    ScrollView {
-                        LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)], spacing: 16) {
-                            ForEach(VM.products.filter {
-                                let productNameMatch = search.isEmpty || $0.productName.lowercased().contains(search.lowercased())
-                                let brandNameMatch = search.isEmpty || $0.brandName.lowercased().contains(search.lowercased())
-                                let selectedButtonMatch = selectedButton == "All" || selectedButton == $0.subcategoryName || selectedButton == $0.categoryName
-                                return productNameMatch && brandNameMatch && selectedButtonMatch
-                            })  { product in
-                                (NavigationLink(destination: ProductDetailsView(productID: product.id ?? "")) {
-                                    VStack {
-                                        URLImage(URL(string: product.image)!) { image in
-                                            image
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 150, height: 250)
-                                                .cornerRadius(8)
-                                        }
-                                        
-                                        Text(product.productName)
-                                            .padding(.bottom, 4)
-                                            .background(Color.white)
-                                        
-                                        Text("\(product.brandName) - Rs.\(product.price)")
-                                            .font(.subheadline)
-                                            .foregroundColor(.gray)
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                    .padding(8)
-                                    .cornerRadius(8)
-                                })
-                                .buttonStyle(PlainButtonStyle())
+                
+             /*   ScrollView {
+                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)], spacing: 16) {
+                        ForEach(VM.products.filter {
+                            let productNameMatch = search.isEmpty || $0.productName.lowercased().contains(search.lowercased())
+                            let brandNameMatch = search.isEmpty || $0.brandName.lowercased().contains(search.lowercased())
+                            let selectedButtonMatch = selectedButton == "All" || selectedButton == $0.subcategoryName || selectedButton == $0.categoryName
+                            return productNameMatch && brandNameMatch && selectedButtonMatch
+                        })  { product in
+                            VStack {
+                                URLImage(URL(string: product.image)!) { image in
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 150, height: 250)
+                                        .cornerRadius(8)
+                                }
+                                
+                                Text(product.productName)
+                                    .padding(.bottom, 4)
+                                    .background(Color.white)
+                                
+                                Text("\(product.brandName) - Rs.\(product.price)")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
                             }
+                            .frame(maxWidth: .infinity)
+                            .padding(8)
+                            .cornerRadius(8)
                         }
                     }
-                    .navigationBarBackButtonHidden(true)
-            //    }
+                }
+                .navigationBarBackButtonHidden(true)*/
+           
+                
+                let filteredProducts = VM.products.filter { $0.brandName == brand }
 
-                
-                
-                
-                // NavigationLink(destination: ProductDetailsView(productID: viewModel.selectedProductID ?? ""), isActive: $showProductView) {
-                //     EmptyView()
-                
-                //  }.hidden()
-                //     .onAppear {
-                //                        isTabViewHidden = false
-                //                    }
-                
+                                ScrollView {
+                                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)], spacing: 16) {
+                                        ForEach(filteredProducts.filter {
+                                            let productNameMatch = search.isEmpty || $0.productName.lowercased().contains(search.lowercased())
+                                            let brandNameMatch = search.isEmpty || $0.brandName.lowercased().contains(search.lowercased())
+                                            let selectedButtonMatch = selectedButton == "All" || selectedButton == $0.subcategoryName || selectedButton == $0.categoryName
+                                            return productNameMatch && brandNameMatch && selectedButtonMatch
+                                        }) { product in
+                                            VStack {
+                                                
+                                                    URLImage(URL(string: product.image)!) { image in
+                                                        image
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(width: 150, height: 250)
+                                                            .cornerRadius(8)
+                                                    }
+                                                    
+                                                    Text(product.productName)
+                                                        .padding(.bottom, 4)
+                                                        .background(Color.white)
+                                                    
+                                                    Text("\(product.brandName) - Rs.\(product.price)")
+                                                        .font(.subheadline)
+                                                        .foregroundColor(.gray)
+                                                
+                                                .frame(maxWidth: .infinity)
+                                                .padding(8)
+                                                .cornerRadius(8)
+                                                
+                                            }
+                                        }
+                                    }
+                                }
+                                .navigationBarBackButtonHidden(true)
                 
                 
                 

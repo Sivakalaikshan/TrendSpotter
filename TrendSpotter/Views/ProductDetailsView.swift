@@ -10,8 +10,7 @@ import URLImage
 
 struct ProductDetailsView: View {
     @EnvironmentObject var cartVM: CartViewModel
-    @State private var islogged: Bool = false
-    @State private var isLoginScreenPresented = false
+    @EnvironmentObject var navigationManager: NavigationManager
         @State private var selectedSize: String?
     @State private var selectedButton: String?
     @State private var showCartView = false
@@ -73,15 +72,17 @@ struct ProductDetailsView: View {
                     
                     Button(action: {
                         showCartView = true
-                        if islogged{
-                            if let selectedSize = selectedSize {
-                                let cartItem = CartModel( product: viewModel.products.first?.id ?? "" , quantity: 1, size: selectedSize)
-                                cartVM.saveCartItem(cartItem)
-                            }
-                        }
-                        else {
-                            isLoginScreenPresented = true
-                        }
+                        
+                        if let selectedSize = selectedSize {
+                               // Assuming you have a product object available here
+                            let newProduct = CartModel(productName: product.productName, brandName: product.brandName, selectedSize: selectedSize, price: Double(product.price), image: product.image)
+                            addProductToCart(newProduct)
+                               
+                               // Convert the cartItem to Data
+                               
+                            
+
+                           }
                     }) {
                         Text("Add Cart")
                             .padding()
@@ -92,7 +93,7 @@ struct ProductDetailsView: View {
                             .cornerRadius(10)
                     }
                     
-                    NavigationLink(destination: LoginView(productID: viewModel.selectedProductID ?? ""), isActive: $showCartView){
+                    NavigationLink(destination: ProductView(ViewModel: ProductViewModel()), isActive: $showCartView){
                         
                     }
                     .navigationBarBackButtonHidden(true)
@@ -109,6 +110,26 @@ struct ProductDetailsView: View {
         
         
     }
+    
+    
+    func addProductToCart(_ product: CartModel) {
+        // Retrieve the existing array of products from UserDefaults
+        var cartItems: [CartModel] = []
+        if let savedData = UserDefaults.standard.data(forKey: "cartItems") {
+            if let decodedItems = try? JSONDecoder().decode([CartModel].self, from: savedData) {
+                cartItems = decodedItems
+            }
+        }
+        
+        // Append the new product to the array
+        cartItems.append(product)
+        
+        // Encode the updated array and save it back to UserDefaults
+        if let encoded = try? JSONEncoder().encode(cartItems) {
+            UserDefaults.standard.set(encoded, forKey: "cartItems")
+        }
+    }
+
 }
 
 #Preview {

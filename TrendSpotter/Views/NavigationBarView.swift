@@ -9,26 +9,31 @@ import SwiftUI
 
 struct NavigationBarView: View {
     @Binding var isTabViewHidden: Bool
+    
     var body: some View {
         VStack {
                    if !isTabViewHidden {
-                       TabView {
+                       TabView{
                            FirstView()
+                               .tag(0)
                                .tabItem {
                                    Image(systemName: "house")
                                    Text("Home")
                                }
                            SecondView()
+                               .tag(1)
                                .tabItem {
                                    Image(systemName: "suitcase")
                                    Text("Products")
                                }
                            ThirdView()
+                               .tag(2)
                                .tabItem {
                                    Image(systemName: "cart")
                                    Text("Cart")
                                }
                            FourthView()
+                               .tag(3)
                                .tabItem {
                                    Image(systemName: "person")
                                    Text("Account")
@@ -37,6 +42,7 @@ struct NavigationBarView: View {
                        .tabViewStyle(DefaultTabViewStyle())
                        .accentColor(.black)
                        .edgesIgnoringSafeArea(.all)
+                       
 
                    }
 
@@ -56,13 +62,13 @@ struct FirstView: View {
 
 struct SecondView: View {
     var body: some View {
-        ProductView( brand: "")
+        ProductView(ViewModel: ProductViewModel())
     }
 }
 
 struct ThirdView: View {
     var body: some View {
-        CartView(productID: "")
+        CartView()
     }
 }
 

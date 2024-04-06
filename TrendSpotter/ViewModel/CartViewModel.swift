@@ -10,7 +10,7 @@ import Foundation
 class CartViewModel: ObservableObject {
     @Published var cartItems: [CartModel] = []
     
-    func getAllCartItems() {
+  /*  func getAllCartItems() {
         guard let url = URL(string: APIConstantsCart.getallURL) else {
             print("Invalid URL")
             return
@@ -60,7 +60,7 @@ class CartViewModel: ObservableObject {
         } catch {
             print("Error encoding cart item: \(error)")
         }
-    }
+    }*/
 
     
   

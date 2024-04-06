@@ -14,6 +14,7 @@ struct HomeView: View {
     @State private var isActive = false
     @State private var currentIndex = 0
        @State private var timer: Timer?
+    @StateObject var navigationManager = NavigationManager.shared
        let images = ["kids", "women", "men"]
        //let timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
     @State private var selectedBrand: String = ""
@@ -269,11 +270,14 @@ struct HomeView: View {
                                     .padding()
                             )
                     }
-                    .background(NavigationLink(destination: ProductView(brand: selectedBrand), isActive: $isActive) {
+                    NavigationLink(destination: BrandView(brand: selectedBrand), isActive: $isActive) {
                         EmptyView()
                     }
                     .hidden()
-                    .navigationBarBackButtonHidden(true))
+                    
+                   
+                    
+                  
                     
                     
                 }

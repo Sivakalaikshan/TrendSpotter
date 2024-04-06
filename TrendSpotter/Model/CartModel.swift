@@ -7,22 +7,15 @@
 
 import Foundation
 struct CartModel: Codable {
-    let product: String // Assuming this is the product ID
-       let quantity: Int
-       let size: String
-    
-    enum CodingKeys: String, CodingKey {
-        case product = "productId"
-        case quantity
-        case size
-    }
+   
+        let productName: String
+        let brandName: String
+        let selectedSize: String
+        let price: Double
+    let image: String
+
 }
 
 
 
 
-struct APIConstantsCart {
-    static let getallURL = "https://clothing-api-ios.onrender.com/cart/get"
-    static let postURL = "https://clothing-api-ios.onrender.com/cart"
-    
-}

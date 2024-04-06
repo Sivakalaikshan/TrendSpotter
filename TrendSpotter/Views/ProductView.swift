@@ -10,7 +10,7 @@ import URLImage
 
 struct ProductView: View {
     
-    @ObservedObject var VM: ProductViewModel
+    @ObservedObject var ViewModel: ProductViewModel
     @State private var search: String = ""
     @State private var isEditing = false
     @State private var selectedButton: String? = "All"
@@ -19,15 +19,9 @@ struct ProductView: View {
     @State private var isTabViewHidden = false
     @State private var brandName: String?
     @State private var selectedProductID: String?
-    var productID: String = "defaultProductID"
-    let brand: String
+    var productID: String?
     
-    init(brand: String){
-            self.brand = brand
-        self.VM = ProductViewModel()
-        VM.fetchProductbrand(for: brand)
-        }
-
+    
    
     var body: some View {
         NavigationView{
@@ -89,91 +83,64 @@ struct ProductView: View {
                 
                 
                 
-             /*   ScrollView {
+                ScrollView {
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)], spacing: 16) {
-                        ForEach(VM.products.filter {
-                            let productNameMatch = search.isEmpty || $0.productName.lowercased().contains(search.lowercased())
-                            let brandNameMatch = search.isEmpty || $0.brandName.lowercased().contains(search.lowercased())
-                            let selectedButtonMatch = selectedButton == "All" || selectedButton == $0.subcategoryName || selectedButton == $0.categoryName
-                            return productNameMatch && brandNameMatch && selectedButtonMatch
-                        })  { product in
-                            VStack {
-                                URLImage(URL(string: product.image)!) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 150, height: 250)
-                                        .cornerRadius(8)
+                        ForEach(ViewModel.products.filter { product in
+                            let searchLowercased = search.lowercased()
+                                let productNameMatch = search.isEmpty || product.productName.localizedCaseInsensitiveContains(searchLowercased)
+                                let selectedButtonMatch = selectedButton == "All" || selectedButton == product.subcategoryName || selectedButton == product.categoryName
+                                
+                                return productNameMatch && selectedButtonMatch
+                        }) { product in
+                            NavigationLink(destination: ProductDetailsView(productID: selectedProductID ?? "")) {
+                                VStack {
+                                    URLImage(URL(string: product.image)!) { image in
+                                        image
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 150, height: 250)
+                                            .cornerRadius(8)
+                                    }
+                                    
+                                    Text(product.productName)
+                                        .padding(.bottom, 4)
+                                        .background(Color.white)
+                                    
+                                    Text("\(product.brandName) - Rs.\(product.price)")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
                                 }
-                                
-                                Text(product.productName)
-                                    .padding(.bottom, 4)
-                                    .background(Color.white)
-                                
-                                Text("\(product.brandName) - Rs.\(product.price)")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
+                                .frame(maxWidth: .infinity)
+                                .padding(8)
+                                .cornerRadius(8)
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding(8)
-                            .cornerRadius(8)
+                            .buttonStyle(PlainButtonStyle()) // Use PlainButtonStyle to remove default button styles
+                            .simultaneousGesture(TapGesture().onEnded {
+                                selectedProductID = product.id
+                            })
                         }
                     }
                 }
-                .navigationBarBackButtonHidden(true)*/
+
            
                 
-                let filteredProducts = VM.products.filter { $0.brandName == brand }
-
-                                ScrollView {
-                                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)], spacing: 16) {
-                                        ForEach(filteredProducts.filter {
-                                            let productNameMatch = search.isEmpty || $0.productName.lowercased().contains(search.lowercased())
-                                            let brandNameMatch = search.isEmpty || $0.brandName.lowercased().contains(search.lowercased())
-                                            let selectedButtonMatch = selectedButton == "All" || selectedButton == $0.subcategoryName || selectedButton == $0.categoryName
-                                            return productNameMatch && brandNameMatch && selectedButtonMatch
-                                        }) { product in
-                                            VStack {
-                                                
-                                                    URLImage(URL(string: product.image)!) { image in
-                                                        image
-                                                            .resizable()
-                                                            .scaledToFit()
-                                                            .frame(width: 150, height: 250)
-                                                            .cornerRadius(8)
-                                                    }
-                                                    
-                                                    Text(product.productName)
-                                                        .padding(.bottom, 4)
-                                                        .background(Color.white)
-                                                    
-                                                    Text("\(product.brandName) - Rs.\(product.price)")
-                                                        .font(.subheadline)
-                                                        .foregroundColor(.gray)
-                                                
-                                                .frame(maxWidth: .infinity)
-                                                .padding(8)
-                                                .cornerRadius(8)
-                                                
-                                            }
-                                        }
-                                    }
-                                }
-                                .navigationBarBackButtonHidden(true)
+                
                 
                 
                 
                 Spacer()
             }//end of top vstack
             
+            
         }
+        .navigationBarBackButtonHidden(true)
         
     }
 }
 
 #Preview {
     NavigationView {
-        ProductView(brand: "")
+        ProductView(ViewModel: ProductViewModel(), productID: "defaultProductID")
             .environmentObject(ProductViewModel())
     }
 }

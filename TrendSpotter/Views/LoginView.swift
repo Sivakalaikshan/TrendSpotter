@@ -9,14 +9,8 @@ import SwiftUI
 
 struct LoginView: View {
     @StateObject var loginVM: LoginViewModel = LoginViewModel()
-    let productID: String
-        @ObservedObject var viewModel: ProductViewModel
-        
-        init(productID: String) {
-            self.productID = productID
-            self.viewModel = ProductViewModel()
-            viewModel.fetchProductDetails(for: productID)
-        }
+    
+       
 
     var body: some View {
         VStack {
@@ -117,5 +111,5 @@ struct LoginView: View {
 
 
 #Preview {
-    LoginView(productID: "")
+    LoginView()
 }

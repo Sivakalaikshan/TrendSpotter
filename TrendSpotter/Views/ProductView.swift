@@ -19,9 +19,11 @@ struct ProductView: View {
     @State private var isTabViewHidden = false
     @State private var brandName: String?
     @State private var selectedProductID: String?
+    @State private var sortAscending = true
     var productID: String?
     
     
+
    
     var body: some View {
         NavigationView{
@@ -81,6 +83,15 @@ struct ProductView: View {
                     
                 }
                 
+                Button(action: {
+                    sortAscending.toggle()
+                    sortProducts()
+                }) {
+                    Image( sortAscending ? "down" : "up")
+                        .foregroundColor(.black)
+                        .background(Color.white)
+                }
+                .padding(.leading, 290)
                 
                 
                 ScrollView {
@@ -121,20 +132,20 @@ struct ProductView: View {
                         }
                     }
                 }
-
-           
-                
-                
-                
-                
-                
-                Spacer()
-            }//end of top vstack
-            
+            }
             
         }
         .navigationBarBackButtonHidden(true)
-        
+    }
+    
+    private func sortProducts() {
+        ViewModel.products.sort { first, second in
+            if sortAscending {
+                return first.price < second.price
+            } else {
+                return first.price > second.price
+            }
+        }
     }
 }
 

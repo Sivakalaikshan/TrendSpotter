@@ -32,12 +32,7 @@ struct NavigationBarView: View {
                                    Image(systemName: "cart")
                                    Text("Cart")
                                }
-                           FourthView()
-                               .tag(3)
-                               .tabItem {
-                                   Image(systemName: "person")
-                                   Text("Account")
-                               }
+                           
                        }
                        .tabViewStyle(DefaultTabViewStyle())
                        .accentColor(.black)
@@ -72,12 +67,7 @@ struct ThirdView: View {
     }
 }
 
-struct FourthView: View {
-    var body: some View {
-         ProfileView()
-    }
 
-}
 
 
 #Preview {

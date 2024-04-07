@@ -270,9 +270,9 @@ struct HomeView: View {
                                     .padding()
                             )
                     }
-                    NavigationLink(destination: BrandView(brand: selectedBrand), isActive: $isActive) {
+                    .background(NavigationLink(destination: BrandView(brand: selectedBrand), isActive: $isActive) {
                         EmptyView()
-                    }
+                    })
                     .hidden()
                     
                    

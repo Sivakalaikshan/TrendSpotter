@@ -6,13 +6,14 @@
 //
 
 import Foundation
-struct CartModel: Codable {
-   
-        let productName: String
-        let brandName: String
-        let selectedSize: String
-        let price: Double
-    let image: String
+struct CartModel: Codable,Identifiable, Hashable {
+    var id: String
+        var productName: String
+        var brandName: String
+        var selectedSize: String
+        var price: Int
+    var image: String
+    var quantity: Int
 
 }
 

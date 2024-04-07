@@ -9,7 +9,7 @@ import SwiftUI
 import URLImage
 struct BrandView: View {
     
-    @ObservedObject var VM: ProductViewModel
+    @ObservedObject var ViewModel: ProductViewModel
     @StateObject var navigationManager = NavigationManager.shared
     @State private var search: String = ""
     @State private var isEditing = false
@@ -19,13 +19,14 @@ struct BrandView: View {
     @State private var isTabViewHidden = false
     @State private var brandName: String?
     @State private var selectedProductID: String?
+    @State private var sortAscending = true
         var productID: String?
     let brand: String
     
     init(brand: String){
             self.brand = brand
-        self.VM = ProductViewModel()
-        VM.fetchProductbrand(for: brand)
+        self.ViewModel = ProductViewModel()
+        ViewModel.fetchProductbrand(for: brand)
         }
     
     var body: some View {
@@ -86,7 +87,15 @@ struct BrandView: View {
                     
                 }
                 
-                
+                Button(action: {
+                    sortAscending.toggle()
+                    sortProducts()
+                }) {
+                    Image( sortAscending ? "down" : "up")
+                        .foregroundColor(.black)
+                        .background(Color.white)
+                }
+                .padding(.leading, 290)
                 
              
                 NavigationLink(destination: ProductDetailsView(productID: navigationManager.productID ?? ""), isActive: $navigationManager.navigateToProductDetails) {
@@ -94,7 +103,7 @@ struct BrandView: View {
                                }
                                .hidden()
                 
-                let filteredProducts = VM.products.filter { $0.brandName == brand }
+                let filteredProducts = ViewModel.products.filter { $0.brandName == brand }
 
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)], spacing: 16) {
@@ -144,6 +153,17 @@ struct BrandView: View {
                 Spacer()
             }//end of top vstack
        
+    }
+    
+    
+    private func sortProducts() {
+        ViewModel.products.sort { first, second in
+            if sortAscending {
+                return first.price < second.price
+            } else {
+                return first.price > second.price
+            }
+        }
     }
 }
 

@@ -8,20 +8,10 @@
 import SwiftUI
 import URLImage
 
-struct Product: Codable {
-    var id = UUID()
-    var name: String
-    var brand: String
-    var size: String
-    var price: Double
-    var quantity: Int
-    var image: String
-}
-
 
 struct PaymentButtonStyle: ButtonStyle {
     let isSelected: Bool
-
+    
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(10)
@@ -44,6 +34,9 @@ struct MyButtonStyle: ButtonStyle {
             .cornerRadius(8)
     }
 }
+enum PaymentMethod {
+   case cashOnDelivery, cardPayment
+}
 
 struct CartView: View {
    
@@ -53,16 +46,20 @@ struct CartView: View {
     @State private var isCashOnDeliverySelected = false
     @State private var isCardPaymentSelected = false
     @State private var isCheckoutViewPresented = false
-    @State private var products: [Product] = []
+    @State private var products: [CartModel] = []
+    @State private var showAlert = false
     
-    
+    @State private var selectedPaymentMethod: PaymentMethod?
+
+        
+
     
     var body: some View {
         VStack {
             Text("My Cart").font(.system(size: 22)).bold()
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    ScrollView{
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
                         ForEach(products, id: \.id) { product in
                             // Product item view
                             HStack(spacing: 20) {
@@ -75,11 +72,12 @@ struct CartView: View {
                                 }
                                 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text(product.name)
+                                    Text(product.productName)
                                         .font(.headline)
-                                    Text("\(product.brand) - \(product.size)")
+                                    Text("\(product.brandName) - \(product.selectedSize)")
                                         .font(.subheadline)
-                                    Text(String(format: "RS.%.2f", product.price))
+                                    Text("Rs.\(product.price).00")
+
                                         .font(.subheadline)
                                     HStack {
                                         Button(action: {
@@ -97,15 +95,15 @@ struct CartView: View {
                                         Button(action: {
                                             // Remove the product from the cart
                                             products.removeAll(where: { $0.id == product.id })
-                                                // Remove the product from local storage
-                                                removeFromLocalStorage(product)
+                                            // Remove the product from local storage
+                                            removeFromLocalStorage(product)
                                             
                                         }) {
                                             Image(systemName: "trash")
                                                 .foregroundColor(.red)
                                                 .padding(.leading, 50)
                                         }
-
+                                        
                                     }
                                 }
                             }
@@ -116,12 +114,12 @@ struct CartView: View {
                                 RoundedRectangle(cornerRadius: 10)
                                     .stroke(Color.gray, lineWidth: 1)
                             )
-                           
+                            
                         }
                     }
+                    .padding()
+                    .frame(height: 300)
                 }
-                .padding()
-                .frame(height: 300)
 
                 Divider()
                     .background(Color.black)
@@ -137,7 +135,7 @@ struct CartView: View {
                     Text("Shipping").bold()
                         .padding(.trailing, 10)
                     Spacer()
-                    Text("Rs.\(shipping)")
+                    Text("Rs.\(shipping).00")
 
                 }.padding()
                 
@@ -162,36 +160,50 @@ struct CartView: View {
                     Button("Cash on Delivery") {
                         isCashOnDeliverySelected.toggle()
                         isCardPaymentSelected = false
+                        selectedPaymentMethod = .cashOnDelivery
                     }
-                    .buttonStyle(PaymentButtonStyle(isSelected: isCashOnDeliverySelected))
+                    .buttonStyle(PaymentButtonStyle(isSelected: selectedPaymentMethod == .cashOnDelivery))
 
                     Button("Card Payment") {
                         isCardPaymentSelected.toggle()
                         isCashOnDeliverySelected = false
+                        selectedPaymentMethod = .cardPayment
                     }
-                    .buttonStyle(PaymentButtonStyle(isSelected: isCardPaymentSelected))
+                    .buttonStyle(PaymentButtonStyle(isSelected: selectedPaymentMethod == .cardPayment))
                 }
 
                 Button("Proceed To Checkout") {
-                    isCheckoutViewPresented = true
+                    if products.isEmpty {
+                           showAlert = true
+                       } else {
+                           isCheckoutViewPresented = true
+                       }
                 }
                 .buttonStyle(MyButtonStyle())
                 .padding()
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text("Empty Cart"), message: Text("No products in the cart."), dismissButton: .default(Text("OK")))
+                }
             }
         }
         .onAppear(){
-            loadCartData()
+            if let data = UserDefaults.standard.data(forKey: "cartItems") {
+                            if let decoded = try? JSONDecoder().decode([CartModel].self, from: data) {
+                                products = decoded
+                                print("Loaded \(products.count) cart items from UserDefaults")
+                            }
+                        }
         }
         .onDisappear(){
             products = []
         }
         .sheet(isPresented: $isCheckoutViewPresented) {
-            CheckoutView()
+            CheckoutView(selectedPaymentMethod: selectedPaymentMethod, totalPrice: totalPriceIncludingShipping)
         }
         .navigationBarBackButtonHidden(true)
     }
 
-    private func updateQuantity(for product: Product, increase: Bool) {
+    private func updateQuantity(for product: CartModel, increase: Bool) {
         if let index = products.firstIndex(where: { $0.id == product.id }) {
             var updatedProduct = product
             if increase {
@@ -209,9 +221,7 @@ struct CartView: View {
         }
     }
 
-
-
-    private func removeFromLocalStorage(_ product: Product) {
+    private func removeFromLocalStorage(_ product: CartModel) {
         // Retrieve the existing array of products from UserDefaults
         guard var savedData = UserDefaults.standard.data(forKey: "cartItems") else {
             print("No data found for key 'cartItems'")
@@ -219,9 +229,8 @@ struct CartView: View {
         }
 
         do {
-            var decodedItems = try JSONDecoder().decode([Product].self, from: savedData)
+            var decodedItems = try JSONDecoder().decode([CartModel].self, from: savedData)
             // Filter out the product to remove
-            print(product.id)
             decodedItems = decodedItems.filter { $0.id != product.id }
             
             // Encode the updated array and save it back to UserDefaults
@@ -236,71 +245,27 @@ struct CartView: View {
         }
     }
 
-
-
-    
-
-    private func updateLocalStorage(_ products: [Product]) {
+    private func updateLocalStorage(_ products: [CartModel]) {
         // Encode the updated array and save it back to UserDefaults
         if let encoded = try? JSONEncoder().encode(products) {
             UserDefaults.standard.set(encoded, forKey: "cartItems")
         }
     }
 
-    
     private func calculateTotalPrice() -> Double {
-            var total = 0.0
-            for product in products {
-                total += product.price * Double(product.quantity)
-            }
-            return total
+        var total = 0.0
+        for product in products {
+            total += Double(product.price) * Double(product.quantity)
         }
-    
+        return total
+    }
+
     private var totalPriceIncludingShipping: Double {
         return calculateTotalPrice() + Double(shipping)
     }
 
    
-    
-    private func loadCartData() {
-        // Load cart data only if products array is empty
-        guard products.isEmpty else { return }
-
-        // Retrieve the existing array of products from UserDefaults
-        if let savedData = UserDefaults.standard.data(forKey: "cartItems") {
-            do {
-                let decodedItems = try JSONDecoder().decode([Product].self, from: savedData)
-                // Assign the decoded items to products array
-                products = decodedItems
-            } catch {
-                print("Error decoding cart items: \(error.localizedDescription)")
-            }
-        }
-    }
-
-
-    
-   
-
-    /*private func removeFromLocalStorage(_ product: Product, completion: @escaping (Bool) -> Void) {
-        // Retrieve the existing array of products from UserDefaults
-        if let savedData1 = UserDefaults.standard.data(forKey: "cartItems") {
-            if var decodedItems = try? JSONDecoder().decode([CartModel].self, from: savedData1) {
-                // Remove the product from the decoded items
-                decodedItems.removeAll(where: { $0.productName == product.name && $0.brandName == product.brand && $0.selectedSize == product.size && $0.price == product.price })
-                // Encode the updated array and save it back to UserDefaults
-                if let encoded = try? JSONEncoder().encode(decodedItems) {
-                    UserDefaults.standard.set(encoded, forKey: "cartItems")
-                    completion(true) // Success
-                    return
-                }
-            }
-        }
-        completion(false) // Failure
-    }*/
-
 }
-
 
 
 

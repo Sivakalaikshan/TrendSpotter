@@ -9,7 +9,7 @@ import SwiftUI
 import URLImage
 
 struct ProductDetailsView: View {
-    @EnvironmentObject var cartVM: CartViewModel
+    @ObservedObject var cartVM: CartViewModel
     @EnvironmentObject var navigationManager: NavigationManager
         @State private var selectedSize: String?
     @State private var selectedButton: String?
@@ -18,10 +18,11 @@ struct ProductDetailsView: View {
         let productID: String
         
     init(productID: String) {
-        self.productID = productID
-        self.viewModel = ProductViewModel()
-        viewModel.fetchProductDetails(for: productID)
-    }
+            self.productID = productID
+            self.viewModel = ProductViewModel()
+            self.cartVM = CartViewModel() // Instantiate directly
+            viewModel.fetchProductDetails(for: productID)
+        }
     var body: some View {
         NavigationView{
             VStack{
@@ -71,18 +72,13 @@ struct ProductDetailsView: View {
                     .padding()
                     
                     Button(action: {
-                        showCartView = true
                         
-                        if let selectedSize = selectedSize {
-                               // Assuming you have a product object available here
-                            let newProduct = CartModel(productName: product.productName, brandName: product.brandName, selectedSize: selectedSize, price: Double(product.price), image: product.image)
-                            addProductToCart(newProduct)
-                               
-                               // Convert the cartItem to Data
-                               
-                            
-
-                           }
+                        if let product = viewModel.products.first(where: { $0.id == productID }) {
+                            let cartItem = CartModel(id: product.id, productName: product.productName, brandName: product.brandName, selectedSize: selectedSize ?? "", price: product.price, image: product.image, quantity: 1)
+                            cartVM.addItem(cartItem)
+                            showCartView = true
+                        }
+                        
                     }) {
                         Text("Add Cart")
                             .padding()
@@ -92,6 +88,7 @@ struct ProductDetailsView: View {
                             .font(.headline)
                             .cornerRadius(10)
                     }
+
                     
                     NavigationLink(destination: ProductView(ViewModel: ProductViewModel()), isActive: $showCartView){
                         
@@ -112,27 +109,16 @@ struct ProductDetailsView: View {
     }
     
     
-    func addProductToCart(_ product: CartModel) {
-        // Retrieve the existing array of products from UserDefaults
-        var cartItems: [CartModel] = []
-        if let savedData = UserDefaults.standard.data(forKey: "cartItems") {
-            if let decodedItems = try? JSONDecoder().decode([CartModel].self, from: savedData) {
-                cartItems = decodedItems
-            }
-        }
-        
-        // Append the new product to the array
-        cartItems.append(product)
-        
-        // Encode the updated array and save it back to UserDefaults
-        if let encoded = try? JSONEncoder().encode(cartItems) {
-            UserDefaults.standard.set(encoded, forKey: "cartItems")
-        }
+
+
+
+    
+}
+
+struct ProductDetailsView_Previews: PreviewProvider {
+    static var previews: some View {
+        ProductDetailsView(productID: "previewProductID")
+            .environmentObject(CartViewModel())
     }
-
 }
 
-#Preview {
-    ProductDetailsView(productID: "")
-        .environmentObject(CartViewModel())
-}
